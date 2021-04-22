@@ -29,7 +29,7 @@ class GuessMasterGame extends StatefulWidget {
 
 class _GuessMasterGameState extends State<GuessMasterGame> {
   GuessMasterGameRound _rounds = GuessMasterGameRound(
-      round: Round.fifth, choice: GuessMasterChoices.unknown);
+      round: Round.first, choice: GuessMasterChoices.unknown);
   int trial = 0;
   Round currentRoundChange = Round.first;
   GuessMasterChoices _choice = GuessMasterChoices.unknown;
@@ -72,6 +72,7 @@ class _GuessMasterGameState extends State<GuessMasterGame> {
             ModalRoute.withName('/home'));
         return null;
       } catch (e) {
+        debugPrint(e.toString());
         Get.back();
         Get.snackbar('App Error',
             'Sorry we could not connect to the troisplay server, please check your internet connection and try again.',
@@ -82,7 +83,13 @@ class _GuessMasterGameState extends State<GuessMasterGame> {
         return null;
       }
     }).catchError((dynamic error) {
-      debugPrint(e.toString());
+      DioError _dioError;
+      if (error.runtimeType == DioError) {
+        _dioError = error as DioError;
+
+        debugPrint(_rounds.toJson().toString());
+        debugPrint(_dioError.response.data.toString());
+      }
       Get.back();
       Get.snackbar('NetWork Error',
           'Sorry we could not connect to the troisplay server, please check your internet connection and try again.',
@@ -218,7 +225,6 @@ class _GuessMasterGameState extends State<GuessMasterGame> {
                                     _round.choice =
                                         returnGuessMasterChoice(index);
                                     setState(() {
-                                      _rounds = _rounds;
                                       _choice = returnGuessMasterChoice(index);
                                     });
                                   },
