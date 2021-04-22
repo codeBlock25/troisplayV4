@@ -1,0 +1,36 @@
+name: troisplay
+description: Troisplay Mobile
+
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  animations: ^2.0.0
+  badges: ^1.2.0
+  cupertino_icons: ^1.0.2
+  dio: ^3.0.10
+  flutter:
+    sdk: flutter
+  flutter_svg: ^0.19.3
+  get: ^3.26.0
+  get_storage: ^1.4.0
+  intl: ^0.17.0
+  ionicons: ^0.1.1
+  shimmer: ^1.1.2
+  sliding_up_panel: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lint: ^1.5.2
+  test:
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/brand/
+    - assets/images/
+    - assets/icons/
