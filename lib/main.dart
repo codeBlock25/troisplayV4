@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:troisplay/screens/auth/create_account.dart';
@@ -10,11 +11,29 @@ import 'package:troisplay/screens/game_play/ongoing_games.dart';
 import 'package:troisplay/screens/home_base.dart';
 import 'package:troisplay/screens/welcome/onboarding.dart';
 import 'package:troisplay/screens/welcome/splashscreen.dart';
+import 'package:troisplay/screens/help_screen/notification.dart';
 import 'package:troisplay/theme/dark.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
+  const AndroidInitializationSettings initializationAndroidSetting =
+      AndroidInitializationSettings('troisplay_logo');
+  final IOSInitializationSettings iosInitializationSettings =
+      IOSInitializationSettings(
+          onDidReceiveLocalNotification:
+              (int id, String title, String body, String payload) async {});
+  final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationAndroidSetting, iOS: iosInitializationSettings);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String payload) async {
+    if (payload != null) {
+      debugPrint('Notification Payload: $payload');
+    }
+  });
   runApp(AppInit());
 }
 
@@ -89,7 +108,13 @@ class AppInit extends StatelessWidget {
             page: () => HomeScreen(),
             transition: Transition.rightToLeft,
             curve: Curves.easeInOut,
-            transitionDuration: const Duration(milliseconds: 400))
+            transitionDuration: const Duration(milliseconds: 400)),
+        GetPage(
+            name: '/notification',
+            page: () => NotificationScreen(),
+            transition: Transition.rightToLeft,
+            curve: Curves.easeInOut,
+            transitionDuration: const Duration(milliseconds: 400)),
       ],
     );
   }

@@ -6,6 +6,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:troisplay/components/app_bar.dart';
 import 'package:troisplay/components/game.dart';
+import 'package:troisplay/components/slide_up_panel_wrapper.dart';
 import 'package:troisplay/data/game_type.dart';
 import 'package:troisplay/data/played_games.dart';
 import 'package:troisplay/generated/assets.dart';
@@ -29,47 +30,50 @@ class _OnGoingGamesScreenState extends State<Player2GamePicker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBarWithLogo(),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          setState(() {
-            loading = true;
-          });
-          return Timer.periodic(const Duration(milliseconds: 500),
-              (Timer timer) {
-            if (!loading) {
-              timer.cancel();
-            }
-          });
-        },
-        child: FutureBuilder<List<Map<String, dynamic>>>(
-            future: getGamesForP2(game: widget.game, stake: widget.stake),
-            builder: (BuildContext context,
-                AsyncSnapshot<List<Map<String, dynamic>>> snapShot) {
-              if (snapShot.connectionState == ConnectionState.done && loading) {
-                loading = false;
+      body: SlideUpWrapper(
+        body: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              loading = true;
+            });
+            return Timer.periodic(const Duration(milliseconds: 500),
+                (Timer timer) {
+              if (!loading) {
+                timer.cancel();
               }
-              if (snapShot.connectionState == ConnectionState.done &&
-                  snapShot.hasData) {
-                return Player2PickerBody(
-                  games: snapShot.data,
-                  gameType: widget.game,
-                );
-              }
-              return Center(
-                child: SizedBox(
-                  width: Get.width - 30,
-                  height: Get.height - 30,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[600].withOpacity(0.4),
-                    highlightColor: Colors.grey[600].withOpacity(0.6),
-                    child: Image.asset(
-                      Assets.imagesHomeLoadimage,
-                      fit: BoxFit.fitWidth,
+            });
+          },
+          child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: getGamesForP2(game: widget.game, stake: widget.stake),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Map<String, dynamic>>> snapShot) {
+                if (snapShot.connectionState == ConnectionState.done &&
+                    loading) {
+                  loading = false;
+                }
+                if (snapShot.connectionState == ConnectionState.done &&
+                    snapShot.hasData) {
+                  return Player2PickerBody(
+                    games: snapShot.data,
+                    gameType: widget.game,
+                  );
+                }
+                return Center(
+                  child: SizedBox(
+                    width: Get.width - 30,
+                    height: Get.height - 30,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[600].withOpacity(0.4),
+                      highlightColor: Colors.grey[600].withOpacity(0.6),
+                      child: Image.asset(
+                        Assets.imagesHomeLoadimage,
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
+        ),
       ),
     );
   }

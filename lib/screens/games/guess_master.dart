@@ -17,6 +17,7 @@ import 'package:troisplay/data/stat_type.dart';
 import 'package:troisplay/data/user.dart';
 import 'package:troisplay/logic/game.dart';
 import 'package:troisplay/logic/hint.dart';
+import 'package:troisplay/logic/schedule.dart';
 import 'package:troisplay/screens/game_play/game_response.dart';
 
 class GuessMasterGame extends StatefulWidget {
@@ -28,7 +29,7 @@ class GuessMasterGame extends StatefulWidget {
 }
 
 class _GuessMasterGameState extends State<GuessMasterGame> {
-  GuessMasterGameRound _rounds = GuessMasterGameRound(
+  final GuessMasterGameRound _rounds = GuessMasterGameRound(
       round: Round.first, choice: GuessMasterChoices.unknown);
   int trial = 0;
   Round currentRoundChange = Round.first;
@@ -61,6 +62,9 @@ class _GuessMasterGameState extends State<GuessMasterGame> {
         alreadyGames.add(
             PlayedGames.fromJson(value.data['game'] as Map<String, dynamic>));
         await _box.write('games', alreadyGames.toList());
+        await gameLocalNotifier(NotificationModel(
+            title: 'A new game has been added',
+            msg: 'A new Guess Master game has been player by you.'));
         Get.offUntil(
             GetPageRoute<GetPage>(
                 page: () => const GameResponseScreen(

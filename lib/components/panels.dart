@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:troisplay/logic/convert.dart';
+import 'package:troisplay/extensions/strings.dart';
 
 class UserDisplayPanel extends StatelessWidget {
   const UserDisplayPanel({
@@ -72,7 +73,7 @@ class UserDisplayPanel extends StatelessWidget {
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              username,
+                              username.capitalize,
                               key: const ValueKey<String>('username'),
                               style: const TextStyle(
                                   color: Color(0xFFFFFFFF),

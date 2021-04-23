@@ -18,6 +18,7 @@ import 'package:troisplay/data/user.dart';
 import 'package:troisplay/generated/assets.dart';
 import 'package:troisplay/logic/game.dart';
 import 'package:troisplay/logic/hint.dart';
+import 'package:troisplay/logic/schedule.dart';
 import 'package:troisplay/screens/game_play/game_response.dart';
 
 class RoshamboGame extends StatefulWidget {
@@ -72,6 +73,9 @@ class _RoshamboGameState extends State<RoshamboGame> {
         alreadyGames.add(
             PlayedGames.fromJson(value.data['game'] as Map<String, dynamic>));
         await _box.write('games', alreadyGames.toList());
+        await gameLocalNotifier(NotificationModel(
+            title: 'A new game has been added',
+            msg: 'A new Rock, Paper and Scissor game has been player by you.'));
         Get.offUntil(
             GetPageRoute<GetPage>(
                 page: () => const GameResponseScreen(

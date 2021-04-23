@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:troisplay/screens/help_screen/notification.dart';
+import 'package:badges/badges.dart';
 
 AppBar buildAppBarWithLogo() {
   return AppBar(
@@ -92,12 +92,11 @@ AppBar buildAppBarEmpty() {
   );
 }
 
-AppBar buildAppBarWithLogoAndTapBtn(
-    {void Function() leadFunc, void Function() notiFunc}) {
+AppBar buildAppBarWithLogoAndTapBtn({void Function() leadFunc}) {
   return AppBar(
     leading: IconButton(
       icon: const Icon(
-        Icons.menu,
+        Ionicons.grid_outline,
         color: Colors.white,
       ),
       color: Colors.white,
@@ -113,15 +112,19 @@ AppBar buildAppBarWithLogoAndTapBtn(
       Padding(
         padding: const EdgeInsets.only(right: 15),
         child: IconButton(
-          icon: const Icon(
-            Icons.notifications,
-            color: Colors.white,
+          icon: Badge(
+            badgeColor: const Color(0xFF0042EC),
+            badgeContent: const Text(
+              '0',
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            child: const Icon(
+              Ionicons.notifications_outline,
+              color: Colors.white,
+            ),
           ),
           onPressed: () {
-            Get.to(() => NotificationScreen(),
-                transition: Transition.rightToLeft,
-                curve: Curves.easeInOut,
-                duration: const Duration(milliseconds: 400));
+            Get.toNamed('/notification');
           },
         ),
       ),
