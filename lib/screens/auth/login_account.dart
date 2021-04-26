@@ -211,7 +211,7 @@ class _LoginAccountState extends State<LoginAccount> {
                             contentPadding: const EdgeInsets.all(20),
                             fillColor: Colors.white.withOpacity(0.05),
                           ),
-                          obscureText: true,
+                          obscureText: !isPasswordVisible,
                           maxLength: 6,
                           keyboardType: TextInputType.number,
                           keyboardAppearance: Brightness.dark,

@@ -5,11 +5,13 @@ import 'package:dio/dio.dart';
 import 'package:dio/src/response.dart' as dio_response;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:troisplay/components/app_bar.dart';
 import 'package:troisplay/components/buttons.dart';
 import 'package:troisplay/data/api.dart';
+import 'package:troisplay/data/game_record.dart';
 import 'package:troisplay/data/game_type.dart';
 import 'package:troisplay/data/games.dart';
 import 'package:troisplay/data/played_games.dart';
@@ -21,9 +23,11 @@ import 'package:troisplay/logic/schedule.dart';
 import 'package:troisplay/screens/game_play/game_response.dart';
 
 class GuessMasterGame extends StatefulWidget {
-  const GuessMasterGame({this.isPlayer1 = true, @required this.stake});
+  const GuessMasterGame(
+      {this.isPlayer1 = true, @required this.stake, this.id = ''});
   final bool isPlayer1;
   final int stake;
+  final String id;
   @override
   _GuessMasterGameState createState() => _GuessMasterGameState();
 }
@@ -36,6 +40,100 @@ class _GuessMasterGameState extends State<GuessMasterGame> {
   GuessMasterChoices _choice = GuessMasterChoices.unknown;
   final GetStorage _box = GetStorage();
   final Dio _dio = Dio();
+  int trials = 3;
+  Future<void> joinGame() async {
+    final User _user = User.fromJson(await _box.read('user_account'));
+    Get.defaultDialog(
+        title: 'Loading',
+        barrierDismissible: false,
+        backgroundColor: Colors.black.withOpacity(0.5),
+        content: const Center(
+            child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+        )));
+    await _dio
+        .put('$apiKey/api/game-play/guess-master/player2',
+            data: <String, dynamic>{
+              'id': widget?.id ?? '',
+              'moves': <Map<String, int>>[_rounds.toJson()],
+            },
+            options: Options(headers: <String, String>{
+              'authorization': 'Bearer ${_user.token}'
+            }))
+        .then((dio_response.Response<dynamic> value) async {
+      try {
+        final GameRecord _record =
+            GameRecord.fromJson(value.data as Map<String, dynamic>);
+        final bool isFinal = !(value.data['retry'] as bool);
+        if (isFinal || trials < 0) {
+          if (_record.winner == PlayerType.playerTwo) {
+            await gameLocalNotifier(NotificationModel(
+                title: 'Game Completed',
+                msg:
+                    'The Rock, Paper and Scissor game played by you has been completed and you won.'));
+          } else {
+            await gameLocalNotifier(NotificationModel(
+                title: 'Game Completed',
+                msg:
+                    'The Rock, Paper and Scissor game played by you has been completed and you lost.'));
+          }
+          Get.offUntil(
+              GetPageRoute<GetPage>(
+                  page: () => GameResponseScreen(
+                        stat: _record.winner == PlayerType.noOne
+                            ? GameResponse.draw
+                            : _record.winner == PlayerType.playerOne
+                                ? GameResponse.lost
+                                : _record.winner == PlayerType.playerTwo
+                                    ? GameResponse.won
+                                    : GameResponse.finish,
+                        record: _record.record,
+                      ),
+                  transition: Transition.rightToLeft,
+                  curve: Curves.easeInOut,
+                  transitionDuration: const Duration(milliseconds: 400)),
+              ModalRoute.withName('/home'));
+        } else {
+          trial = trials - 1;
+          Fluttertoast.showToast(
+              msg: 'You have $trial trials left',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.grey[800],
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+        Get.back();
+        return null;
+      } catch (e) {
+        debugPrint(e.toString());
+        Get.back();
+        Get.snackbar('App Error',
+            'Sorry we could not connect to the troisplay server, please check your internet connection and try again.',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 10),
+            dismissDirection: SnackDismissDirection.VERTICAL);
+        return null;
+      }
+    }).catchError((dynamic error) {
+      DioError _dioError;
+      if (error.runtimeType == DioError) {
+        _dioError = error as DioError;
+
+        debugPrint(_rounds.toJson().toString());
+        debugPrint(_dioError.response.data.toString());
+      }
+      Get.back();
+      Get.snackbar('NetWork Error',
+          'Sorry we could not connect to the troisplay server, please check your internet connection and try again.',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 10),
+          dismissDirection: SnackDismissDirection.VERTICAL);
+    });
+  }
+
   Future<void> playGame() async {
     final List<PlayedGames> alreadyGames =
         _box.read('games') ?? <PlayedGames>[];
@@ -265,7 +363,12 @@ class _GuessMasterGameState extends State<GuessMasterGame> {
                     Center(
                       child: FirstChoiceBtn(
                         btnText: 'Play',
-                        func: playGame,
+                        func: () => <void>{
+                          if (widget.isPlayer1 == false)
+                            joinGame()
+                          else
+                            playGame()
+                        },
                         width: Get.width / 3,
                         isDisabled:
                             _rounds.choice == GuessMasterChoices.unknown,

@@ -126,8 +126,8 @@ class _SlideUpWrapperState extends State<SlideUpWrapper> {
                         decoration: BoxDecoration(
                             color: const Color(0xFF00E04C),
                             borderRadius: BorderRadius.circular(40)),
-                        child: Text('0',
-                            style: const TextStyle(
+                        child: const Text('0',
+                            style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 15,

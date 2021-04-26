@@ -10,10 +10,14 @@ import 'package:troisplay/screens/game_play/game_picker.dart';
 
 class GameManualScreen extends StatefulWidget {
   const GameManualScreen(
-      {@required this.game, @required this.stake, this.isPlayer1 = true});
+      {@required this.game,
+      @required this.stake,
+      this.isPlayer1 = true,
+      this.id});
   final GameType game;
   final int stake;
   final bool isPlayer1;
+  final String id;
   @override
   _GameManualScreenState createState() => _GameManualScreenState();
 }
@@ -85,6 +89,7 @@ class _GameManualScreenState extends State<GameManualScreen> {
                           game: widget.game,
                           isPlayer1: widget.isPlayer1,
                           stake: widget.stake,
+                          id: widget.id,
                           context: context);
                     },
                     width: (Get.width / 2) - (Get.width / 10),

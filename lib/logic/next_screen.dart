@@ -11,6 +11,7 @@ void continueToGameAsPlayer1(
     {GameType game,
     bool isPlayer1 = true,
     int stake = 100,
+    String id = '',
     BuildContext context}) {
   switch (game) {
     case GameType.roshambo:
@@ -19,6 +20,7 @@ void continueToGameAsPlayer1(
             page: () => RoshamboGame(
               isPlayer1: isPlayer1,
               stake: stake,
+              id: id,
             ),
             transition: Transition.rightToLeft,
             curve: Curves.decelerate,
@@ -32,6 +34,7 @@ void continueToGameAsPlayer1(
             page: () => PenaltyCardGame(
               isPlayer1: isPlayer1,
               stake: stake,
+              id: id,
             ),
             transition: Transition.rightToLeft,
             curve: Curves.decelerate,
@@ -45,7 +48,7 @@ void continueToGameAsPlayer1(
             page: () => GuessMasterGame(
               isPlayer1: isPlayer1,
               stake: stake,
-              // stake: stake,
+              id: id,
             ),
             transition: Transition.rightToLeft,
             curve: Curves.decelerate,

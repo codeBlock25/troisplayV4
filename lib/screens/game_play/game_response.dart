@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:troisplay/components/app_bar.dart';
 import 'package:troisplay/components/buttons.dart';
+import 'package:troisplay/data/game_record.dart';
 import 'package:troisplay/data/stat_type.dart';
 import 'package:troisplay/icons/cup.dart';
 
 class GameResponseScreen extends StatefulWidget {
-  const GameResponseScreen({@required this.stat});
+  const GameResponseScreen({@required this.stat, this.record});
   final GameResponse stat;
+  final List<OutComeRecord> record;
   @override
   _GameResponseScreenState createState() => _GameResponseScreenState();
 }

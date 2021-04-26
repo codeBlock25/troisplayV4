@@ -12,16 +12,20 @@ dependencies:
   badges: ^1.2.0
   cupertino_icons: ^1.0.2
   dio: ^3.0.10
+  firebase_messaging: ^7.0.3
   flutter:
     sdk: flutter
   flutter_local_notifications: ^4.0.1+2
+  flutter_paystack: ^1.0.4+1
   flutter_svg: ^0.19.3
+  fluttertoast: ^7.1.8
   get: ^3.26.0
   get_storage: ^1.4.0
-  intl: ^0.17.0
+  intl: ^0.16.1
   ionicons: ^0.1.1
   shimmer: ^1.1.2
   sliding_up_panel: ^1.0.2
+  url_launcher: ^5.7.10
 
 dev_dependencies:
   flutter_test:

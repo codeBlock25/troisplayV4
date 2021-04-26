@@ -107,7 +107,7 @@ class GameOp2View extends StatelessWidget {
   final GetStorage _box = GetStorage();
   Future<void> canPlay() async {
     Get.defaultDialog(
-        title: 'Loading',
+        title: 'Loading...',
         barrierDismissible: false,
         backgroundColor: Colors.black.withOpacity(0.5),
         content: const Center(
@@ -116,7 +116,7 @@ class GameOp2View extends StatelessWidget {
         )));
     final User _user = User.fromJson(await _box.read('user_account'));
     await _dio
-        .get('$apiKey/api/can-play-as-player2',
+        .get('$apiKey/api/check/can-play-asP2',
             queryParameters: <String, String>{
               'id': id ?? '',
             },
@@ -127,10 +127,7 @@ class GameOp2View extends StatelessWidget {
       if (value.data['canPlay'] == true) {
         Get.to(
             () => GameManualScreen(
-                  game: game,
-                  stake: stake,
-                  isPlayer1: false,
-                ),
+                game: game, stake: stake, isPlayer1: false, id: id),
             transition: Transition.rightToLeft,
             curve: Curves.easeInOut,
             duration: const Duration(milliseconds: 400));
@@ -149,7 +146,13 @@ class GameOp2View extends StatelessWidget {
             Get.back();
           });
     }).catchError((dynamic error) {
-      debugPrint(error.toString());
+      DioError _err;
+      if (error.runtimeType == DioError) {
+        _err = error as DioError;
+      }
+      if (_err != null) {
+        debugPrint(_err.response.data.toString());
+      }
       Get.back();
       Get.snackbar('NetWork Error',
           'Sorry we could not connect to the troisplay server, please check your internet connection and try again.',

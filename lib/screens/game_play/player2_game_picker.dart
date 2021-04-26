@@ -94,76 +94,83 @@ class Player2PickerBody extends StatelessWidget {
     return SizedBox(
       width: Get.width,
       height: Get.height,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Text('Available',
-                style: TextStyle(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text('Available',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              )),
+          Padding(
+            padding: EdgeInsets.only(right: Get.width / 10),
+            child: Text('${returnGameName(gameType)} Games',
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 25,
+                  fontSize: 40,
                 )),
-            Padding(
-              padding: EdgeInsets.only(right: Get.width / 10),
-              child: Text('${returnGameName(gameType)} Games',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 40,
-                  )),
-            ),
-            if (games.isEmpty)
-              SizedBox(
-                width: Get.width,
-                height: Get.height - 200,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Ionicons.alert_circle_outline,
-                      size: Get.width / 5.5,
-                      color: const Color(0xFFF0B821),
-                    ),
-                    Text(
-                      'No games available,\n\n Pull to Refresh',
-                      style: TextStyle(
-                        fontSize: Get.width / 23,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  if (games.isEmpty)
+                    SizedBox(
+                      width: Get.width,
+                      height: Get.height - 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Ionicons.alert_circle_outline,
+                            size: Get.width / 5.5,
+                            color: const Color(0xFFF0B821),
+                          ),
+                          Text(
+                            'No games available,\n\n Pull to Refresh',
+                            style: TextStyle(
+                              fontSize: Get.width / 23,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          Icon(
+                            Ionicons.albums_outline,
+                            size: Get.width / 11.5,
+                            color: const Color(0xFF0042EC),
+                          )
+                        ],
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Icon(
-                      Ionicons.albums_outline,
-                      size: Get.width / 11.5,
-                      color: const Color(0xFF0042EC),
                     )
-                  ],
-                ),
-              )
-            else
-              Center(
-                child: Wrap(
-                  spacing: 20,
-                  alignment: WrapAlignment.spaceBetween,
-                  runAlignment: WrapAlignment.spaceBetween,
-                  children:
-                      List<GameOp2View>.generate(games.length, (int index) {
-                    final PlayedGames _playedGame =
-                        PlayedGames.fromJson(games[index]);
-                    return GameOp2View(
-                      gamePlay: getGame(_playedGame.gameType),
-                      game: _playedGame.gameType,
-                      price: _playedGame.stake + 100,
-                      stake: _playedGame.stake,
-                      id: _playedGame.sId,
-                    );
-                  }),
-                ),
+                  else
+                    Center(
+                      child: Wrap(
+                        spacing: 20,
+                        alignment: WrapAlignment.spaceBetween,
+                        runAlignment: WrapAlignment.spaceBetween,
+                        children: List<GameOp2View>.generate(games.length,
+                            (int index) {
+                          final PlayedGames _playedGame =
+                              PlayedGames.fromJson(games[index]);
+                          return GameOp2View(
+                            gamePlay: getGame(_playedGame.gameType),
+                            game: _playedGame.gameType,
+                            price: _playedGame.stake + 100,
+                            stake: _playedGame.stake,
+                            id: _playedGame.sId,
+                          );
+                        }),
+                      ),
+                    ),
+                  const SizedBox(
+                    height: 200,
+                  )
+                ],
               ),
-            const SizedBox(
-              height: 100,
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

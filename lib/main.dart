@@ -9,6 +9,7 @@ import 'package:troisplay/screens/auth/login_account.dart';
 import 'package:troisplay/screens/game_play/game_picker.dart';
 import 'package:troisplay/screens/game_play/ongoing_games.dart';
 import 'package:troisplay/screens/home_base.dart';
+import 'package:troisplay/screens/vtu/vtu_system.dart';
 import 'package:troisplay/screens/welcome/onboarding.dart';
 import 'package:troisplay/screens/welcome/splashscreen.dart';
 import 'package:troisplay/screens/help_screen/notification.dart';
@@ -69,6 +70,12 @@ class AppInit extends StatelessWidget {
         GetPage(
             name: '/ongoing_games',
             page: () => OnGoingGamesScreen(),
+            transition: Transition.rightToLeft,
+            curve: Curves.easeInOut,
+            transitionDuration: const Duration(milliseconds: 400)),
+        GetPage(
+            name: '/vtu',
+            page: () => VtuSystem(),
             transition: Transition.rightToLeft,
             curve: Curves.easeInOut,
             transitionDuration: const Duration(milliseconds: 400)),

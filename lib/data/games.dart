@@ -98,3 +98,33 @@ class GuessMasterGameRound {
         'choice': choice.index,
       };
 }
+
+PlayerType intToPlayerType(int v) {
+  if (v == PlayerType.playerOne.index) {
+    return PlayerType.playerOne;
+  } else if (v == PlayerType.playerTwo.index) {
+    return PlayerType.playerTwo;
+  } else if (v == PlayerType.playerOthers.index) {
+    return PlayerType.playerOthers;
+  } else {
+    return PlayerType.noOne;
+  }
+}
+
+AllGameType intToGenGameType(int v) {
+  if (v == AllGameType.choice1.index) {
+    return AllGameType.choice1;
+  } else if (v == AllGameType.choice2.index) {
+    return AllGameType.choice2;
+  } else if (v == AllGameType.choice3.index) {
+    return AllGameType.choice3;
+  } else if (v == AllGameType.choice4.index) {
+    return AllGameType.choice4;
+  } else if (v == AllGameType.choice5.index) {
+    return AllGameType.choice5;
+  } else if (v == AllGameType.choice6.index) {
+    return AllGameType.choice6;
+  } else {
+    return AllGameType.choice1;
+  }
+}
